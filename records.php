@@ -54,7 +54,7 @@ if (isset($_GET['d'])) {
         <th>Exercise?</th>
         <th>Diet?</th>
         <th>Help Others?</th>
-        <th>Challenge?</th>
+        <th>Goal Progress?</th>
         <th>Fun?</th>
         <th>Day was...</th>
         <th>&nbsp;</th>
@@ -74,7 +74,7 @@ for ($i=0; $row = $result->fetch(); $i++) {
         <td><?php echo $row['exercise']; ?></td>
         <td><?php echo $row['food']; ?></td>
         <td><?php echo $row['service']; ?></td>
-        <td><?php echo $row['challenge']; ?></td>
+        <td><?php echo $row['goal']; ?></td>
         <td><?php echo $row['fun']; ?></td>
         <td><?php echo $row['satisfaction']; ?></td>
         <td>

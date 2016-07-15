@@ -17,12 +17,7 @@ if (isset($_POST['login'])) {
 
   if (($pass === $check['pw']) && ($user === $check['username'])) {
 
-    $_SESSION['user'] = $check['username'];
     $_SESSION['username'] = $check['username'];
-    $_SESSION['password'] = $check['password'];
-    $_SESSION['fname'] = $check['fname'];
-    $_SESSION['lname'] = $check['lname'];
-    $_SESSION['email'] = $check['email'];
 
     if ($check['adminFlag']) { $_SESSION['admin'] = TRUE; } 
       else { $_SESSION['admin'] = FALSE; }
@@ -84,7 +79,7 @@ if (isset($_POST['login'])) {
       <strong>Dont have an account? <a href="register.php">Create one here.</a></strong>
 
       <!-- Forgot password -->
-      <strong>Oops! I <a href="includes/inc_forgot.php">forgot my password!</a></strong>
+      <!-- <strong>Oops! I <a href="includes/inc_forgot.php">forgot my password!</a></strong> -->
 
     </div>
   </div>

@@ -20,7 +20,7 @@ if(isset($_POST['update'])) {
     $exercise = $_POST['exercise'];
     $food = $_POST['food'];
     $service = $_POST['service'];
-    $challenge = $_POST['challenge'];
+    $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
     $notes = $_POST['notes'];
@@ -31,7 +31,7 @@ if(isset($_POST['update'])) {
                                exercise = :exercise,
                                food = :food,
                                service = :service,
-                               challenge = :challenge,
+                               goal = :goal,
                                fun = :fun,
                                satisfaction = :satisfaction,
                                notes = :notes  
@@ -43,7 +43,7 @@ if(isset($_POST['update'])) {
     $stmt->bindParam(':exercise',$exercise);
     $stmt->bindParam(':food',$food);    
     $stmt->bindParam(':service',$service);
-    $stmt->bindParam(':challenge',$challenge);
+    $stmt->bindParam(':goal',$goal);
     $stmt->bindParam(':fun',$fun);
     $stmt->bindParam(':satisfaction',$satisfaction);
     $stmt->bindParam(':notes',$notes);
@@ -141,11 +141,11 @@ if(isset($_POST['update'])) {
         <option <?php echo (($_POST['service'] == "No") || $row['service'] == "No") ? "selected='selected'" : ""; ?> value="No">No</option>
       </select>
 
-      <h4 class="field-label">Did you challenge yourself today?</h4>
-      <select class="form-control" name="challenge" required>
-        <option value="" disabled selected>Did you challenge yourself today?</option>
-        <option <?php echo (($_POST['challenge'] == "Yes") || $row['challenge'] == "Yes") ? "selected='selected'" : ""; ?> value="Yes">Yes</option>
-        <option <?php echo (($_POST['challenge'] == "No") || $row['challenge'] == "No") ? "selected='selected'" : ""; ?> value="No">No</option>
+      <h4 class="field-label">Did you make progress towards a goal or project?</h4>
+      <select class="form-control" name="goal" required>
+        <option value="" disabled selected>Did you make progress towards a goal or project?</option>
+        <option <?php echo (($_POST['goal'] == "Yes") || $row['goal'] == "Yes") ? "selected='selected'" : ""; ?> value="Yes">Yes</option>
+        <option <?php echo (($_POST['goal'] == "No") || $row['goal'] == "No") ? "selected='selected'" : ""; ?> value="No">No</option>
       </select>
 
       <h4 class="field-label">Did you have fun?</h4>
@@ -158,7 +158,6 @@ if(isset($_POST['update'])) {
       <h4 class="field-label">How would you rate your day?</h4>
       <select class="form-control" name="satisfaction" required>
         <option value="" disabled selected>How would you rate your day?</option>
-        <option <?php echo (($_POST['satisfaction'] == "Excellent") || $row['satisfaction'] == "Excellent") ? "selected='selected'" : ""; ?> value="Excellent">Excellent</option>
         <option <?php echo (($_POST['satisfaction'] == "Great") || $row['satisfaction'] == "Great") ? "selected='selected'" : ""; ?> value="Great">Great</option>
         <option <?php echo (($_POST['satisfaction'] == "Good") || $row['satisfaction'] == "Good") ? "selected='selected'" : ""; ?> value="Good">Good</option>
         <option <?php echo (($_POST['satisfaction'] == "Fair") || $row['satisfaction'] == "Fair") ? "selected='selected'" : ""; ?> value="Fair">Fair</option>

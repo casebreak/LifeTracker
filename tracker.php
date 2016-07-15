@@ -19,7 +19,7 @@ if(isset($_POST['submit'])) {
     $exercise = $_POST['exercise'];
     $food = $_POST['food'];
     $service = $_POST['service'];
-    $challenge = $_POST['challenge'];
+    $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
     $notes = $_POST['notes'];
@@ -32,7 +32,7 @@ if(isset($_POST['submit'])) {
                                   exercise,
                                   food,
                                   service,
-                                  challenge,
+                                  goal,
                                   fun,
                                   satisfaction,
                                   notes) 
@@ -43,7 +43,7 @@ if(isset($_POST['submit'])) {
                                   :exercise,
                                   :food,
                                   :service,
-                                  :challenge,
+                                  :goal,
                                   :fun,
                                   :satisfaction,
                                   :notes)";
@@ -54,7 +54,7 @@ if(isset($_POST['submit'])) {
     $stmt->bindParam(':exercise',$exercise);
     $stmt->bindParam(':food',$food);    
     $stmt->bindParam(':service',$service);
-    $stmt->bindParam(':challenge',$challenge);
+    $stmt->bindParam(':goal',$goal);
     $stmt->bindParam(':fun',$fun);
     $stmt->bindParam(':satisfaction',$satisfaction);
     $stmt->bindParam(':notes',$notes);
@@ -140,21 +140,20 @@ if(isset($_POST['submit'])) {
         <option value="No">No</option>
       </select>
 
-      <select class="form-control" name="challenge" required>
-        <option value="" disabled selected>Did you challenge yourself today?</option>
+      <select class="form-control" name="goal" required>
+        <option value="" disabled selected>Did you make progress on a goal or project?</option>
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>
 
       <select class="form-control" name="fun" required>
-        <option value="" disabled selected>Did you have fun?</option>
+        <option value="" disabled selected>Did you set aside time to have fun?</option>
         <option value="Yes">Yes</option>
         <option value="No">No</option>
       </select>      
 
       <select class="form-control" name="satisfaction" required>
         <option value="" disabled selected>How would you rate your day?</option>
-        <option value="Excellent">Excellent</option>
         <option value="Great">Great</option>
         <option value="Good">Good</option>
         <option value="Fair">Fair</option>

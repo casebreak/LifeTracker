@@ -30,12 +30,23 @@
             <a href="http://lifetracker.case-break.com/analyze.php">Analyze</a>
           </li>
         </ul>
+
+<?php
+//Only display "logged in as" and "logout" labels when a user is logged in
+if(isset($_SESSION['username'])) {
+?>
+
         <ul class="nav navbar-nav navbar-right">
         	<li style="padding-top: 15px; padding-left: 15px; color: #fff;">
 	        	Logged in as: <?php echo $_SESSION['username']; ?>
-						<span style="margin-left: 20px;"><a href="inc_logout.php">Logout</a></span>
+						<span style="margin-left: 20px;"><a href="includes/inc_logout.php">Logout</a></span>
 					</li>
         </ul>
+
+<?php
+}//End if(isset($_SESSION['username']))
+?>
+
       </div>
     </div>
   </nav><!-- Close navigation -->

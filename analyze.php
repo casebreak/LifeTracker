@@ -11,15 +11,14 @@ $page = "analyze";
 
 include('includes/inc_connect.php');
 
-$stmt = "SELECT * FROM records WHERE user = :user ";
+$stmt = "";
 
-//Query by satisfaction
+//Query by daily satisfaction levels
 if (isset($_GET['day'])) {
 
+  $stmt .= "SELECT * FROM records WHERE user = :user ";
+
   switch ($_GET['day']) {
-    case 'excellent':
-      $stmt .= " AND satisfaction LIKE '%excellent%' ORDER BY ID DESC";
-      break;
     case 'great':
       $stmt .= " AND satisfaction LIKE '%great%' ORDER BY ID DESC";
       break;
@@ -35,11 +34,25 @@ if (isset($_GET['day'])) {
     default:
       break;
   }//End switch ($_GET['day'])
-}//End if (isset($_GET['day']))
+
+//Query by timeframe
+} elseif (isset($_GET['timeframe'])) {
+  
+  $stmt .= "SELECT * FROM records WHERE user = :user LIMIT " . $_GET['timeframe'] . "";
+
+} elseif (isset($_POST['searchbtn'])) {
+  
+  $stmt .= "SELECT * FROM records WHERE user = :user AND notes LIKE '%" . $_POST['search'] . "%' ORDER BY ID DESC";
+
+}
 
 $result = $db->prepare($stmt);
 $result->bindParam(':user',$_SESSION['username']);
 $result->execute();
+
+if (isset($_POST['clear'])) {
+  header('Location: http://lifetracker.case-break.com/analyze.php');
+}
 
 ?>
 
@@ -57,7 +70,7 @@ $result->execute();
     display:block;
     margin-bottom:15px;
     background:#eee;
-    height:35px;
+    height:30px;
     width:100%;
     border-radius:3px;
     -moz-border-radius:3px;
@@ -112,8 +125,8 @@ $result->execute();
     display:block;
     background:rgba(0, 0, 0, 0.1);
     padding:0 20px;
-    height:35px;
-    line-height:35px;
+    height:30px;
+    line-height:30px;
     -webkit-border-top-left-radius:3px;
     -webkit-border-bottom-left-radius:3px;
     -moz-border-radius-topleft:3px;
@@ -126,8 +139,8 @@ $result->execute();
     display:block;
     background:rgba(0, 0, 0, 0.1);
     padding:0 20px;
-    height:35px;
-    line-height:35px;
+    height:30px;
+    line-height:30px;
     -webkit-border-top-left-radius:3px;
     -webkit-border-bottom-left-radius:3px;
     -moz-border-radius-topleft:3px;
@@ -137,7 +150,7 @@ $result->execute();
   }  
 
   .skillbar-bar {
-    height:35px;
+    height:30px;
     width:0px;
     background:#6adcfa;
     border-radius:3px;
@@ -150,8 +163,8 @@ $result->execute();
     right:10px;
     top:0;
     font-size:11px;
-    height:35px;
-    line-height:35px;
+    height:30px;
+    line-height:30px;
     color:#000 !important;
     color:rgba(0, 0, 0, 0.4);
   }
@@ -163,6 +176,10 @@ $result->execute();
   /* Miscellaneous styles */
   thead tr th {
     text-align: center;
+  }
+
+  .panel-body {
+    padding-bottom: 0;
   }
 
   </style>
@@ -183,29 +200,56 @@ $result->execute();
         
   <?php include("includes/inc_nav.php"); ?>
 
-  <?php echo session_id(); ?>
-
   <div class="container"><!-- Main container -->
 
+    <form method="POST">
+      <div class="btn-group" role="group">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Show me my 
+              <?php
+              if (isset($_GET['day'])) {
+                echo $_GET['day'] . " days";
+              } elseif (isset($_GET['timeframe'])) {
+                echo "Last " . $_GET['timeframe'] . " records";
+              }
+              ?>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Search by satisfaction</li>
+            <li><a href="analyze.php?day=great">Great days</a></li>
+            <li><a href="analyze.php?day=good">Good days</a></li>
+            <li><a href="analyze.php?day=fair">Fair days</a></li>
+            <li><a href="analyze.php?day=poor">Poor days</a></li>
+            <li class="dropdown-header">Search by timeframe</li>
+            <li><a href="analyze.php?timeframe=7">Last 7 records</a></li>
+            <li><a href="analyze.php?timeframe=30">Last 30 records</a></li>
+            <li><a href="analyze.php?timeframe=90">Last 90 records</a></li>
+            <li><a href="analyze.php?timeframe=180">Last 180 records</a></li>
+            <li><a href="analyze.php?timeframe=365">Last 365 records</a></li>
+          </ul>
+        </div>
+        <button type="submit" name="clear" class="btn btn-danger" style="margin-left: 20px;">Clear Search</button>
+      </div>
 
-    <div class="btn-group">
-      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-left: 50px; padding-right: 30px;">
-        Show me my <?php echo (isset($_GET['day'])) ? $_GET['day'] . ' days' : ''; ?> 
-        <span class="caret" style="margin-left: 20px;"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="analyze.php?day=excellent">Excellent days</a></li>
-        <li><a href="analyze.php?day=great">Great days</a></li>
-        <li><a href="analyze.php?day=good">Good days</a></li>
-        <li><a href="analyze.php?day=fair">Fair days</a></li>
-        <li><a href="analyze.php?day=poor">Poor days</a></li>
-      </ul>
-    </div>  
+      <h4>OR</h4>
+
+      <div class="row" style="margin-bottom: 20px;">
+        <div class="col-lg-6">
+          <div class="input-group">
+            <input type="text" class="form-control" name="search" placeholder="Look for keywords within your notes" value="<?php echo $_POST['search']; ?>">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit" name="searchbtn">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </form>
 
 <?php
 
 #Satisfaction variables
-$excellent = 0;
 $great = 0;
 $good = 0;
 $fair = 0;
@@ -223,9 +267,9 @@ $diet_no = 0;
 $ser_yes = 0;
 $serv_no = 0;
 
-#Challenge variables
-$chal_yes = 0;
-$chal_no = 0;
+#Goal variables
+$goal_yes = 0;
+$goal_no = 0;
 
 #Fun variables
 $fun_yes = 0;
@@ -233,7 +277,14 @@ $fun_no = 0;
 
 $sleepAvg = 0;
 
+
+//Initialize empty $notes array
+$notes = array();
+
 for ($i=0; $row = $result->fetch(); $i++) { 
+
+  //Append the $notes array to include the recordDate as the key and the note as the value
+  $notes[$row['recordDate']] = $row['notes'];
  
   $numRecords = $i + 1; //Count the number of records
 
@@ -278,17 +329,17 @@ for ($i=0; $row = $result->fetch(); $i++) {
       break;
   }//End switch ($row['service'])
 
-  #Challenge
-  switch ($row['challenge']) {
+  #goal
+  switch ($row['goal']) {
     case 'Yes':
-      $chal_yes++;
+      $goal_yes++;
       break;
     case 'No':
-      $chal_no++;
+      $goal_no++;
       break;
     default:
       break;
-  }//End switch ($row['challenge'])
+  }//End switch ($row['goal'])
 
   #Fun
   switch ($row['fun']) {
@@ -304,9 +355,6 @@ for ($i=0; $row = $result->fetch(); $i++) {
 
   #Satisfaction
   switch ($row['satisfaction']) {
-    case 'Excellent':
-      $excellent++;
-      break;
     case 'Great':
       $great++;
       break;
@@ -318,8 +366,7 @@ for ($i=0; $row = $result->fetch(); $i++) {
       break;
     case 'Poor':
       $poor++;
-      break;
-    
+      break;    
     default:
       break;
   }//End switch ($row['satisfaction'])
@@ -340,9 +387,9 @@ $per_nodiet = $diet_no / $numRecords;
 $per_serv = $serv_yes / $numRecords;
 $per_noserv = $serv_no / $numRecords;
 
-//Challenge
-$per_chal = $chal_yes / $numRecords;
-$per_nochal = $chal_no / $numRecords;
+//Goal
+$per_goal = $goal_yes / $numRecords;
+$per_nogoal = $goal_no / $numRecords;
 
 //Fun
 $per_fun = $fun_yes / $numRecords;
@@ -352,31 +399,57 @@ $per_nofun = $fun_no / $numRecords;
 $foo = $sleepAvg / $numRecords;
 
 /*
-Prints the results container only if the query != it's default value.
+Prints the results container only if the query != it's default value, which is blank.
 In other words, if no query is selected, no results will be printed.
 */
-if ($stmt != "SELECT * FROM records WHERE user = :user ") {
-
+if ($stmt != "" && !isset($_POST['search'])) {
 ?>  
     
-    <div class="well" style="margin-top: 20px;"><!-- Container to display results -->
 
 <?php
 if ($numRecords == 0) { //If no records exist...
 ?>
-      <p>You've had no '<?php echo $_GET['day']; ?>' days.</p>
+      <p>You have no records for your selected search.</p>
 
 <?php
 } else {
+  if (isset($_GET['timeframe'])) {
 ?>
       
-      <!-- Output the total number of records for the selected query -->
-      <p>Number of days: <?php echo $numRecords; ?></p>
+      <div class="skillbar clearfix" data-percent="<?php echo round((float)($great / $numRecords) * 100) . '%'; ?>">
+        <div class="skillbar-title" style="background: #A95C03;"><span>Great</span></div>
+        <div class="skillbar-bar" style="background: #D87B0F;"></div>
+        <div class="skill-bar-percent"><?php echo $great . ' day(s)'; ?></div>
+      </div> <!-- End Skill Bar --> 
 
+      <div class="skillbar clearfix" data-percent="<?php echo round((float)($good / $numRecords) * 100) . '%'; ?>">
+        <div class="skillbar-title" style="background: #A95C03;"><span>Good</span></div>
+        <div class="skillbar-bar" style="background: #D87B0F;"></div>
+        <div class="skill-bar-percent"><?php echo $good . ' day(s)'; ?></div>
+      </div> <!-- End Skill Bar -->
+
+      <div class="skillbar clearfix" data-percent="<?php echo round((float)($fair / $numRecords) * 100) . '%'; ?>">
+        <div class="skillbar-title" style="background: #A95C03;"><span>Fair</span></div>
+        <div class="skillbar-bar" style="background: #D87B0F;"></div>
+        <div class="skill-bar-percent"><?php echo $fair . ' day(s)'; ?></div>
+      </div> <!-- End Skill Bar -->
+
+      <div class="skillbar clearfix" data-percent="<?php echo round((float)($poor / $numRecords) * 100) . '%'; ?>">
+        <div class="skillbar-title" style="background: #A95C03;"><span>Poor</span></div>
+        <div class="skillbar-bar" style="background: #D87B0F;"></div>
+        <div class="skill-bar-percent"><?php echo $poor . ' day(s)'; ?></div>
+      </div> <!-- End Skill Bar -->
+
+<?php
+}//End if (isset($_GET['timeframe']))
+?>      
+
+      <p>Showing <?php echo $numRecords; ?> record(s)</p>
+  
       <!-- Display cards of data -->
       <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">Did you exercise?</div>
             <div class="panel-body">          
@@ -388,8 +461,8 @@ if ($numRecords == 0) { //If no records exist...
               </div> <!-- End Skill Bar -->                        
               
               <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_noexercise * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #d35400;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #e67e22;"></div>
+                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
+                <div class="skillbar-bar" style="background: #E02331;"></div>
                 <div class="skill-bar-percent"><?php echo round((float)$per_noexercise * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar --> 
 
@@ -397,7 +470,7 @@ if ($numRecords == 0) { //If no records exist...
           </div>
         </div><!-- Close <div class="col-lg-6"> -->
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">Did you follow a good diet?</div>
             <div class="panel-body">          
@@ -409,8 +482,8 @@ if ($numRecords == 0) { //If no records exist...
               </div> <!-- End Skill Bar -->                        
               
               <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_nodiet * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #d35400;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #e67e22;"></div>
+                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
+                <div class="skillbar-bar" style="background: #E02331;"></div>
                 <div class="skill-bar-percent"><?php echo round((float)$per_nodiet * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar --> 
 
@@ -421,7 +494,7 @@ if ($numRecords == 0) { //If no records exist...
 
       <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">Did you do something to help others?</div>
             <div class="panel-body">          
@@ -433,8 +506,8 @@ if ($numRecords == 0) { //If no records exist...
               </div> <!-- End Skill Bar -->                        
               
               <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_noserv * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #d35400;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #e67e22;"></div>
+                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
+                <div class="skillbar-bar" style="background: #E02331;"></div>
                 <div class="skill-bar-percent"><?php echo round((float)$per_noserv * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar --> 
 
@@ -442,21 +515,21 @@ if ($numRecords == 0) { //If no records exist...
           </div>
         </div><!-- End <div class="col-lg-6"> -->
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
-            <div class="panel-heading">Did you challenge yourself?</div>
+            <div class="panel-heading">Did you make progress towards a goal or project?</div>
             <div class="panel-body">          
 
-              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_chal * 100) . '%'; ?>">
+              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_goal * 100) . '%'; ?>">
                 <div class="skillbar-title" style="background: #27ae60;"><span>YES</span></div>
                 <div class="skillbar-bar" style="background: #2ecc71;"></div>
-                <div class="skill-bar-percent"><?php echo round((float)$per_chal * 100) . '%'; ?></div>
+                <div class="skill-bar-percent"><?php echo round((float)$per_goal * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar -->                        
               
-              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_nochal * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #d35400;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #e67e22;"></div>
-                <div class="skill-bar-percent"><?php echo round((float)$per_nochal * 100) . '%'; ?></div>
+              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_nogoal * 100) . '%'; ?>">
+                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
+                <div class="skillbar-bar" style="background: #E02331;"></div>
+                <div class="skill-bar-percent"><?php echo round((float)$per_nogoal * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar --> 
 
             </div>     
@@ -466,9 +539,9 @@ if ($numRecords == 0) { //If no records exist...
 
       <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
-            <div class="panel-heading">Did you have fun?</div>
+            <div class="panel-heading">Did you set aside time to have fun?</div>
             <div class="panel-body">          
 
               <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_fun * 100) . '%'; ?>">
@@ -478,8 +551,8 @@ if ($numRecords == 0) { //If no records exist...
               </div> <!-- End Skill Bar -->                        
               
               <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_nofun * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #d35400;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #e67e22;"></div>
+                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
+                <div class="skillbar-bar" style="background: #E02331;"></div>
                 <div class="skill-bar-percent"><?php echo round((float)$per_nofun * 100) . '%'; ?></div>
               </div> <!-- End Skill Bar --> 
 
@@ -487,10 +560,10 @@ if ($numRecords == 0) { //If no records exist...
           </div>
         </div><!-- End <div class="col-lg-6"> -->
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
             <div class="panel-heading">Sleep Average</div>
-            <div class="panel-body" style="padding-top: 40px; padding-bottom: 40px;">          
+            <div class="panel-body" style="padding-top: 30px; padding-bottom: 30px;">          
 
               <div class="skillbar clearfix" data-percent="<?php echo ($foo <= 8) ? round((float)(($foo / 8) * 100), 2) . '%' : '100%'; ?>">
                 <div class="skillbar-title-wider" style="background: #27ae60;"><span>SLEEP</span></div>
@@ -502,12 +575,29 @@ if ($numRecords == 0) { //If no records exist...
           </div>
         </div><!-- End <div class="col-lg-6> -->
       </div><!-- End <div class="row"> -->
-    </div><!-- Close <div clss="well"> -->
 
 <?php
 }//End if ($numRecords == 0) else...
-}//End if ($stmt != "SELECT * FROM records WHERE user = :user ")
-?>    
+}//End if ($stmt != "")
+
+if (isset($_POST['searchbtn'])) {
+?>
+    <p>Number of records matching your search: <?php echo $numRecords; ?></p>
+
+<?php
+//Iterate through $notes array to print key->value pairs of entries
+foreach ($notes as $day => $note) {
+?>
+
+    <div class="well" style="padding: 5px 10px;">
+      <p style="margin-bottom: 5px;">Date: <strong><?php echo $day; ?></strong></p> 
+      <p style="margin-bottom: 5px;"><?php echo $note; ?></p>
+    </div>       
+
+<?php
+}//End foreach ($notes as $day => $note)
+}//End if (isset($_POST['searchbtn']))
+?>
 
   </div><!-- Close <div class="container"> -->
 

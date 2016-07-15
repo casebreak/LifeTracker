@@ -1,3 +1,18 @@
+<?php
+
+session_start();
+
+include('inc_connect.php');
+
+$stmt = "SELECT * FROM records WHERE user = :user";
+
+$result = $db->prepare($stmt);
+$result->bindParam(':user',$_POST['username']);
+$result->execute();
+$row = $result->fetch();
+
+?>
+
 <!doctype html>
 <html>
 <head>
@@ -14,19 +29,8 @@
 
   <div class="container"><!-- Main container -->
 
-  	<center><form action="POST">
-
- 			<div class="input-group">
-       	<span class="input-group-addon" id="basic-addon3">Username</span>
-       	<input type="text" name="username" class="form-control" value="" required>
-     	</div>
-
-     	<button class="btn btn-success" type="submit" value="submit">Submit</button>
-
- 		</form></center>
-
 <?php
-if (isset($_GET['reset'])) {
+if (!isset($_GET['reset'])) {
 ?>
 
   	<center><form action="POST">
@@ -35,6 +39,28 @@ if (isset($_GET['reset'])) {
        	<span class="input-group-addon" id="basic-addon3">Username</span>
        	<input type="text" name="username" class="form-control" value="" required>
      	</div>
+
+     	<button class="btn btn-success" type="lookup" value="submit">Submit</button>
+
+ 		</form></center>
+
+<?php
+}//End if (!isset($_GET['reset']))
+
+if (isset($_GET['reset'])) {
+?>
+
+  	<center><form action="POST">
+
+ 			<div class="input-group">
+       	<span class="input-group-addon" id="basic-addon3">New Password</span>
+       	<input type="text" name="password" class="form-control" value="" required>
+     	</div>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon3">Confirm New Password</span>
+        <input type="text" name="confirm" class="form-control" value="" required>
+      </div>      
 
      	<button class="btn btn-success" type="submit" name="submit" value="Submit">Submit</button>
 
@@ -43,7 +69,7 @@ if (isset($_GET['reset'])) {
 <?php
 }//End if (isset($_GET['reset'])) 
 
-if (isset($_POST['submit']) && $correct) {
+if (isset($_POST['lookup']) && $correct) {
 ?>
 
 		<h1><?php echo $row['question']; ?></h1>
@@ -51,7 +77,7 @@ if (isset($_POST['submit']) && $correct) {
   	<center><form action="POST">
 
  			<div class="input-group">
-       	<span class="input-group-addon" id="basic-addon3">Username</span>
+       	<span class="input-group-addon" id="basic-addon3">Answer to secret question</span>
        	<input type="text" name="answer" class="form-control" required>
      	</div>
 
