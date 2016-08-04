@@ -20,16 +20,16 @@ if (isset($_GET['day'])) {
 
   switch ($_GET['day']) {
     case 'great':
-      $stmt .= " AND satisfaction LIKE '%great%' ORDER BY ID DESC";
+      $stmt .= " AND satisfaction LIKE '%great%' ORDER BY recordDate DESC";
       break;
     case 'good':
-      $stmt .= " AND satisfaction LIKE '%good%' ORDER BY ID DESC";
+      $stmt .= " AND satisfaction LIKE '%good%' ORDER BY recordDate DESC";
       break;
     case 'fair':
-      $stmt .= " AND satisfaction LIKE '%fair%' ORDER BY ID DESC";
+      $stmt .= " AND satisfaction LIKE '%fair%' ORDER BY recordDate DESC";
       break;
     case 'poor':
-      $stmt .= " AND satisfaction LIKE '%poor%' ORDER BY ID DESC";
+      $stmt .= " AND satisfaction LIKE '%poor%' ORDER BY recordDate DESC";
       break;
     default:
       break;
@@ -38,11 +38,11 @@ if (isset($_GET['day'])) {
 //Query by timeframe
 } elseif (isset($_GET['timeframe'])) {
   
-  $stmt .= "SELECT * FROM records WHERE user = :user LIMIT " . $_GET['timeframe'] . "";
+  $stmt .= "SELECT * FROM records WHERE user = :user ORDER BY recordDate DESC LIMIT " . $_GET['timeframe'] . "";
 
 } elseif (isset($_POST['searchbtn'])) {
   
-  $stmt .= "SELECT * FROM records WHERE user = :user AND notes LIKE '%" . $_POST['search'] . "%' ORDER BY ID DESC";
+  $stmt .= "SELECT * FROM records WHERE user = :user AND notes LIKE '%" . $_POST['search'] . "%' ORDER BY recordDate DESC";
 
 }
 
@@ -203,7 +203,7 @@ if (isset($_POST['clear'])) {
   <div class="container"><!-- Main container -->
 
     <form method="POST">
-      <div class="btn-group" role="group">
+      <div class="btn-group" role="group" style="margin-bottom: 20px;">
         <div class="btn-group" role="group">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Show me my 
@@ -233,6 +233,10 @@ if (isset($_POST['clear'])) {
         <button type="submit" name="clear" class="btn btn-danger" style="margin-left: 20px;">Clear Search</button>
       </div>
 
+<?php
+if (!isset($_GET['day']) && !isset($_GET['timeframe'])) {
+?>
+
       <h4>OR</h4>
 
       <div class="row" style="margin-bottom: 20px;">
@@ -249,6 +253,8 @@ if (isset($_POST['clear'])) {
 
 <?php
 
+}//End if (!isset($_GET['day']) || !isset($_GET['timeframe']))
+
 #Satisfaction variables
 $great = 0;
 $good = 0;
@@ -262,10 +268,6 @@ $ex_no = 0;
 #Diet variables
 $diet_yes = 0;
 $diet_no = 0;
-
-#Service variables
-$ser_yes = 0;
-$serv_no = 0;
 
 #Goal variables
 $goal_yes = 0;
@@ -316,18 +318,6 @@ for ($i=0; $row = $result->fetch(); $i++) {
     default:
       break;
   }//End switch ($row['diet'])
-
-  #Service
-  switch ($row['service']) {
-    case 'Yes':
-      $serv_yes++;
-      break;
-    case 'No':
-      $serv_no++;
-      break;
-    default:
-      break;
-  }//End switch ($row['service'])
 
   #goal
   switch ($row['goal']) {
@@ -383,10 +373,6 @@ $per_noexercise = $ex_no / $numRecords;
 $per_diet = $diet_yes / $numRecords;
 $per_nodiet = $diet_no / $numRecords;
 
-//Service
-$per_serv = $serv_yes / $numRecords;
-$per_noserv = $serv_no / $numRecords;
-
 //Goal
 $per_goal = $goal_yes / $numRecords;
 $per_nogoal = $goal_no / $numRecords;
@@ -415,36 +401,41 @@ if ($numRecords == 0) { //If no records exist...
 } else {
   if (isset($_GET['timeframe'])) {
 ?>
-      
-      <div class="skillbar clearfix" data-percent="<?php echo round((float)($great / $numRecords) * 100) . '%'; ?>">
-        <div class="skillbar-title" style="background: #A95C03;"><span>Great</span></div>
-        <div class="skillbar-bar" style="background: #D87B0F;"></div>
-        <div class="skill-bar-percent"><?php echo $great . ' day(s)'; ?></div>
-      </div> <!-- End Skill Bar --> 
 
-      <div class="skillbar clearfix" data-percent="<?php echo round((float)($good / $numRecords) * 100) . '%'; ?>">
-        <div class="skillbar-title" style="background: #A95C03;"><span>Good</span></div>
-        <div class="skillbar-bar" style="background: #D87B0F;"></div>
-        <div class="skill-bar-percent"><?php echo $good . ' day(s)'; ?></div>
-      </div> <!-- End Skill Bar -->
+      <div class="panel panel-primary">
+        <div class="panel-heading">Satisfaction Overview</div>
+        <div class="panel-body">          
 
-      <div class="skillbar clearfix" data-percent="<?php echo round((float)($fair / $numRecords) * 100) . '%'; ?>">
-        <div class="skillbar-title" style="background: #A95C03;"><span>Fair</span></div>
-        <div class="skillbar-bar" style="background: #D87B0F;"></div>
-        <div class="skill-bar-percent"><?php echo $fair . ' day(s)'; ?></div>
-      </div> <!-- End Skill Bar -->
+          <div class="skillbar clearfix" data-percent="<?php echo round((float)($great / $numRecords) * 100) . '%'; ?>">
+            <div class="skillbar-title" style="background: #A95C03;"><span>Great</span></div>
+            <div class="skillbar-bar" style="background: #D87B0F;"></div>
+            <div class="skill-bar-percent"><?php echo $great . ' day(s)'; ?></div>
+          </div> <!-- End Skill Bar --> 
 
-      <div class="skillbar clearfix" data-percent="<?php echo round((float)($poor / $numRecords) * 100) . '%'; ?>">
-        <div class="skillbar-title" style="background: #A95C03;"><span>Poor</span></div>
-        <div class="skillbar-bar" style="background: #D87B0F;"></div>
-        <div class="skill-bar-percent"><?php echo $poor . ' day(s)'; ?></div>
-      </div> <!-- End Skill Bar -->
+          <div class="skillbar clearfix" data-percent="<?php echo round((float)($good / $numRecords) * 100) . '%'; ?>">
+            <div class="skillbar-title" style="background: #A95C03;"><span>Good</span></div>
+            <div class="skillbar-bar" style="background: #D87B0F;"></div>
+            <div class="skill-bar-percent"><?php echo $good . ' day(s)'; ?></div>
+          </div> <!-- End Skill Bar -->
+
+          <div class="skillbar clearfix" data-percent="<?php echo round((float)($fair / $numRecords) * 100) . '%'; ?>">
+            <div class="skillbar-title" style="background: #A95C03;"><span>Fair</span></div>
+            <div class="skillbar-bar" style="background: #D87B0F;"></div>
+            <div class="skill-bar-percent"><?php echo $fair . ' day(s)'; ?></div>
+          </div> <!-- End Skill Bar -->
+
+          <div class="skillbar clearfix" data-percent="<?php echo round((float)($poor / $numRecords) * 100) . '%'; ?>">
+            <div class="skillbar-title" style="background: #A95C03;"><span>Poor</span></div>
+            <div class="skillbar-bar" style="background: #D87B0F;"></div>
+            <div class="skill-bar-percent"><?php echo $poor . ' day(s)'; ?></div>
+          </div> <!-- End Skill Bar -->
+
+        </div>     
+      </div>  
 
 <?php
 }//End if (isset($_GET['timeframe']))
 ?>      
-
-      <p>Showing <?php echo $numRecords; ?> record(s)</p>
   
       <!-- Display cards of data -->
       <div class="row">
@@ -496,27 +487,6 @@ if ($numRecords == 0) { //If no records exist...
 
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
-            <div class="panel-heading">Did you do something to help others?</div>
-            <div class="panel-body">          
-
-              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_serv * 100) . '%' ?>">
-                <div class="skillbar-title" style="background: #27ae60;"><span>YES</span></div>
-                <div class="skillbar-bar" style="background: #2ecc71;"></div>
-                <div class="skill-bar-percent"><?php echo round((float)$per_serv * 100) . '%' ?></div>
-              </div> <!-- End Skill Bar -->                        
-              
-              <div class="skillbar clearfix" data-percent="<?php echo round((float)$per_noserv * 100) . '%'; ?>">
-                <div class="skillbar-title" style="background: #95000B;"><span>NO</span></div>
-                <div class="skillbar-bar" style="background: #E02331;"></div>
-                <div class="skill-bar-percent"><?php echo round((float)$per_noserv * 100) . '%'; ?></div>
-              </div> <!-- End Skill Bar --> 
-
-            </div>     
-          </div>
-        </div><!-- End <div class="col-lg-6"> -->
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-          <div class="panel panel-primary">
             <div class="panel-heading">Did you make progress towards a goal or project?</div>
             <div class="panel-body">          
 
@@ -535,9 +505,6 @@ if ($numRecords == 0) { //If no records exist...
             </div>     
           </div>
         </div><!-- End <div class="col-lg-6> -->
-      </div><!-- End <div class="row"> -->
-
-      <div class="row">
 
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="panel panel-primary">
@@ -559,22 +526,22 @@ if ($numRecords == 0) { //If no records exist...
             </div>     
           </div>
         </div><!-- End <div class="col-lg-6"> -->
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-          <div class="panel panel-primary">
-            <div class="panel-heading">Sleep Average</div>
-            <div class="panel-body" style="padding-top: 30px; padding-bottom: 30px;">          
-
-              <div class="skillbar clearfix" data-percent="<?php echo ($foo <= 8) ? round((float)(($foo / 8) * 100), 2) . '%' : '100%'; ?>">
-                <div class="skillbar-title-wider" style="background: #27ae60;"><span>SLEEP</span></div>
-                <div class="skillbar-bar" style="background: #2ecc71;"></div>
-                <div class="skill-bar-percent"><?php echo round((float)$foo, 2) . " hours" ?></div>
-              </div> <!-- End Skill Bar -->
-
-            </div>     
-          </div>
-        </div><!-- End <div class="col-lg-6> -->
       </div><!-- End <div class="row"> -->
+
+      <div class="panel panel-primary">
+        <div class="panel-heading">Sleep Average</div>
+        <div class="panel-body">          
+
+          <div class="skillbar clearfix" data-percent="<?php echo ($foo <= 8) ? round((float)(($foo / 8) * 100), 2) . '%' : '100%'; ?>">
+            <div class="skillbar-title-wider" style="background: #27ae60;"><span>SLEEP</span></div>
+            <div class="skillbar-bar" style="background: #2ecc71;"></div>
+            <div class="skill-bar-percent"><?php echo round((float)$foo, 2) . " hours" ?></div>
+          </div> <!-- End Skill Bar -->
+
+        </div>     
+      </div>
+
+      <p>Number of records: <?php echo $numRecords; ?></p>
 
 <?php
 }//End if ($numRecords == 0) else...

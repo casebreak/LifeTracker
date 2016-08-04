@@ -11,6 +11,12 @@ $page = "tracker";
 
 if(isset($_POST['submit'])) {
 
+  function clean($data) {
+    $data = trim($data);
+    $data = htmlspecialchars($data);
+    return $data;    
+  }  
+
   try {
 
     $user = $_SESSION['username'];
@@ -18,11 +24,10 @@ if(isset($_POST['submit'])) {
     $sleep = $_POST['sleep'];
     $exercise = $_POST['exercise'];
     $food = $_POST['food'];
-    $service = $_POST['service'];
     $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
-    $notes = $_POST['notes'];
+    $notes = clean($_POST['notes']);
 
     include('includes/inc_connect.php');
 
@@ -31,7 +36,6 @@ if(isset($_POST['submit'])) {
                                   sleep,
                                   exercise,
                                   food,
-                                  service,
                                   goal,
                                   fun,
                                   satisfaction,
@@ -42,7 +46,6 @@ if(isset($_POST['submit'])) {
                                   :sleep,
                                   :exercise,
                                   :food,
-                                  :service,
                                   :goal,
                                   :fun,
                                   :satisfaction,
@@ -53,7 +56,6 @@ if(isset($_POST['submit'])) {
     $stmt->bindParam(':sleep',$sleep);
     $stmt->bindParam(':exercise',$exercise);
     $stmt->bindParam(':food',$food);    
-    $stmt->bindParam(':service',$service);
     $stmt->bindParam(':goal',$goal);
     $stmt->bindParam(':fun',$fun);
     $stmt->bindParam(':satisfaction',$satisfaction);
@@ -134,12 +136,6 @@ if(isset($_POST['submit'])) {
         <option value="No">No</option>
       </select>
 
-      <select class="form-control" name="service" required>
-        <option value="" disabled selected>Did you do something to help someone else today?</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-      </select>
-
       <select class="form-control" name="goal" required>
         <option value="" disabled selected>Did you make progress on a goal or project?</option>
         <option value="Yes">Yes</option>
@@ -160,7 +156,7 @@ if(isset($_POST['submit'])) {
         <option value="Poor">Poor</option>
       </select>
 
-      <textarea name="notes" class="form-control" rows="5" col="100" placeholder="Enter any additional notes here (Optional)"></textarea>
+      <textarea name="notes" class="form-control" rows="5" col="100" maxlength="350" placeholder="Enter any additional notes here (Optional, 350 max characters)"></textarea>
 
       <button class="btn btn-success" type="submit" name="submit" value="Submit" style="margin-bottom: 20px">Submit</button>
 

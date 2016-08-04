@@ -13,24 +13,28 @@ $row = $query->fetch();
 
 if(isset($_POST['update'])) {
 
+  function clean($data) {
+    $data = trim($data);
+    $data = htmlspecialchars($data);
+    return $data;    
+  }   
+
   try {
 
     $recordDate = $_POST['date'];
     $sleep = $_POST['sleep'];
     $exercise = $_POST['exercise'];
     $food = $_POST['food'];
-    $service = $_POST['service'];
     $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
-    $notes = $_POST['notes'];
+    $notes = clean($_POST['notes']);
 
 
     $sql = "UPDATE records SET recordDate = :recordDate,
                                sleep = :sleep,
                                exercise = :exercise,
                                food = :food,
-                               service = :service,
                                goal = :goal,
                                fun = :fun,
                                satisfaction = :satisfaction,
@@ -42,7 +46,6 @@ if(isset($_POST['update'])) {
     $stmt->bindParam(':sleep',$sleep);
     $stmt->bindParam(':exercise',$exercise);
     $stmt->bindParam(':food',$food);    
-    $stmt->bindParam(':service',$service);
     $stmt->bindParam(':goal',$goal);
     $stmt->bindParam(':fun',$fun);
     $stmt->bindParam(':satisfaction',$satisfaction);
@@ -134,13 +137,6 @@ if(isset($_POST['update'])) {
         <option <?php echo (($_POST['food'] == "No") || $row['food'] == "No") ? "selected='selected'" : ""; ?> value="No">No</option>
       </select>
 
-      <h4 class="field-label">Did you do something to help someone else today?</h4>
-      <select class="form-control" name="service" required>
-        <option value="" disabled selected>Did you do something to help someone else today?</option>
-        <option <?php echo (($_POST['service'] == "Yes") || $row['service'] == "Yes") ? "selected='selected'" : ""; ?> value="Yes">Yes</option>
-        <option <?php echo (($_POST['service'] == "No") || $row['service'] == "No") ? "selected='selected'" : ""; ?> value="No">No</option>
-      </select>
-
       <h4 class="field-label">Did you make progress towards a goal or project?</h4>
       <select class="form-control" name="goal" required>
         <option value="" disabled selected>Did you make progress towards a goal or project?</option>
@@ -164,7 +160,7 @@ if(isset($_POST['update'])) {
         <option <?php echo (($_POST['satisfaction'] == "Poor") || $row['satisfaction'] == "Poor") ? "selected='selected'" : ""; ?> value="Poor">Poor</option>
       </select>
 
-      <textarea name="notes" class="form-control" rows="5" col="100" placeholder="Enter any additional notes here (Optional)"><?php echo (isset($_POST['update']) ? $_POST['notes'] : $row['notes']) ?></textarea>
+      <textarea name="notes" class="form-control" rows="5" col="100" maxlength="350" placeholder="Enter any additional notes here (Optional, 350 max characters)"><?php echo (isset($_POST['update']) ? $_POST['notes'] : $row['notes']) ?></textarea>
 
       <button type="submit" name="update" value="Update" class="btn btn-success">Update Record</button>
       &nbsp;
