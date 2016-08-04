@@ -51,15 +51,15 @@ if(isset($_POST['submit'])) {
                                   :satisfaction,
                                   :notes)";
     $stmt = $db->prepare($query);
-    $stmt->bindParam(':user',$user);
-    $stmt->bindParam(':recordDate',$recordDate);
-    $stmt->bindParam(':sleep',$sleep);
-    $stmt->bindParam(':exercise',$exercise);
-    $stmt->bindParam(':food',$food);    
-    $stmt->bindParam(':goal',$goal);
-    $stmt->bindParam(':fun',$fun);
-    $stmt->bindParam(':satisfaction',$satisfaction);
-    $stmt->bindParam(':notes',$notes);
+    $stmt->bindParam(':user',$user, PDO::PARAM_STR);
+    $stmt->bindParam(':recordDate',$recordDate, PDO::PARAM_STR);
+    $stmt->bindParam(':sleep',$sleep, PDO::PARAM_STR);
+    $stmt->bindParam(':exercise',$exercise, PDO::PARAM_STR);
+    $stmt->bindParam(':food',$food, PDO::PARAM_STR);    
+    $stmt->bindParam(':goal',$goal, PDO::PARAM_STR);
+    $stmt->bindParam(':fun',$fun, PDO::PARAM_STR);
+    $stmt->bindParam(':satisfaction',$satisfaction, PDO::PARAM_STR);
+    $stmt->bindParam(':notes',$notes, PDO::PARAM_STR);
 
     if ($stmt->execute())
     {

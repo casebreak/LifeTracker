@@ -10,7 +10,7 @@ $pass = md5($_POST['pass']);
 if (isset($_POST['login'])) {
 
   $result = $db->prepare("SELECT * FROM users WHERE username = :username");
-  $result->bindParam(':username',$user);
+  $result->bindParam(':username',$user, PDO::PARAM_STR);
   $result->execute();
 
   $check = $result->fetch(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ if (isset($_POST['login'])) {
       else { $_SESSION['admin'] = FALSE; }
 
     $db = null;
-    header("location: tracker.php");
+    header("location: info.php");
 
   } else { echo "<div class='alert alert-danger' role='alert'><h3>Invalid Credentials</h3></div>"; }
 }

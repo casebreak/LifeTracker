@@ -29,9 +29,6 @@
           <li class="<?php echo ($page == 'analyze' ? 'active' : ' ')?>">
             <a href="http://lifetracker.case-break.com/analyze.php">Analyze</a>
           </li>
-          <li class="<?php echo ($page == 'info' ? 'active' : ' ')?>">
-            <a href="http://lifetracker.case-break.com/info.php">Info</a>
-          </li>
         </ul>
 
 <?php

@@ -52,7 +52,7 @@ if (isset($_POST['register'])) {
     $data = clean($data);
     $pattern = "/^\w{4,25}$/";
     $result = $db->prepare("SELECT * FROM users WHERE username = :username");
-    $result->bindParam(':username',$data);
+    $result->bindParam(':username',$data, PDO::PARAM_STR);
     $result->execute();
     $numRows = $result->fetchColumn();
     if ($numRows > 0) {
@@ -94,7 +94,7 @@ if (isset($_POST['register'])) {
     $data = trim($data);
     $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[_a-z0-9-]+(\.[_a-z0-9-]+)*(\.[a-z]{2,5})$/i";
     $result = $db->prepare("SELECT * FROM users WHERE email = :email");
-    $result->bindParam(':email',$data);
+    $result->bindParam(':email',$data, PDO::PARAM_STR);
     $result->execute();
     $numRows = $result->fetchColumn();
     if ($numRows > 0) {
@@ -159,13 +159,13 @@ if (isset($_POST['register'])) {
                                  :question,
                                  :answer)";
       $stmt = $db->prepare($sql);
-      $stmt->bindParam(':username',$un);
-      $stmt->bindParam(':pw',$pw);
-      $stmt->bindParam(':email',$em);
-      $stmt->bindParam(':fname',$fn);
-      $stmt->bindParam(':lname',$ln);
-      $stmt->bindParam(':question',$_POST['question']);
-      $stmt->bindParam(':answer',$_POST['answer']);
+      $stmt->bindParam(':username',$un, PDO::PARAM_STR);
+      $stmt->bindParam(':pw',$pw, PDO::PARAM_STR);
+      $stmt->bindParam(':email',$em, PDO::PARAM_STR);
+      $stmt->bindParam(':fname',$fn, PDO::PARAM_STR);
+      $stmt->bindParam(':lname',$ln, PDO::PARAM_STR);
+      $stmt->bindParam(':question',$_POST['question'], PDO::PARAM_STR);
+      $stmt->bindParam(':answer',$_POST['answer'], PDO::PARAM_STR);
       // $stmt->bindParam(':metric1',$_POST['metric1']);
       // $stmt->bindParam(':metric2',$_POST['metric2']);
       // $stmt->bindParam(':metric3',$_POST['metric3']);

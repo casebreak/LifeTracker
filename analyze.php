@@ -47,7 +47,7 @@ if (isset($_GET['day'])) {
 }
 
 $result = $db->prepare($stmt);
-$result->bindParam(':user',$_SESSION['username']);
+$result->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
 $result->execute();
 
 if (isset($_POST['clear'])) {
@@ -283,7 +283,7 @@ $sleepAvg = 0;
 //Initialize empty $notes array
 $notes = array();
 
-for ($i=0; $row = $result->fetch(); $i++) { 
+for ($i=0; $row = $result->fetch(PDO::FETCH_ASSOC); $i++) { 
 
   //Append the $notes array to include the recordDate as the key and the note as the value
   $notes[$row['recordDate']] = $row['notes'];

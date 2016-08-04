@@ -87,7 +87,7 @@ else {
 $getData = $db->prepare('SELECT * FROM records WHERE user = :user ORDER BY recordDate DESC LIMIT :start, :limit');
 $getData->bindParam(':start', $start, PDO::PARAM_INT);
 $getData->bindParam(':limit', $limit, PDO::PARAM_INT);
-$getData->bindParam(':user',$_SESSION['username']);
+$getData->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
 $getData->execute(); 
 
 //Fetch the data and Display the items
@@ -139,7 +139,7 @@ $numRecords += 1;
 /*Calculate total number of pages to display, 
  based on total number of records in database */
 $data=$db->prepare('SELECT * FROM records WHERE user = :user');
-$data->bindParam(':user',$_SESSION['username']);
+$data->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
 $data->execute();
 $totalRecd = $data->rowCount();
 $num_of_pages = ceil($totalRecd/$limit);

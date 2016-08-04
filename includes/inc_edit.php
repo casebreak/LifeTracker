@@ -7,9 +7,9 @@ $page = "edit";
 include('inc_connect.php');
 
 $query = $db->prepare("SELECT * FROM records WHERE id = :id");
-$query->bindParam(':id',$_GET['id']);
+$query->bindParam(':id',$_GET['id'], PDO::PARAM_INT);
 $query->execute();
-$row = $query->fetch();
+$row = $query->fetch(PDO::FETCH_ASSOC);
 
 if(isset($_POST['update'])) {
 
@@ -42,15 +42,15 @@ if(isset($_POST['update'])) {
                                WHERE id = :id";    
 
     $stmt = $db->prepare($sql);
-    $stmt->bindParam(':recordDate',$recordDate);
-    $stmt->bindParam(':sleep',$sleep);
-    $stmt->bindParam(':exercise',$exercise);
-    $stmt->bindParam(':food',$food);    
-    $stmt->bindParam(':goal',$goal);
-    $stmt->bindParam(':fun',$fun);
-    $stmt->bindParam(':satisfaction',$satisfaction);
-    $stmt->bindParam(':notes',$notes);
-    $stmt->bindParam(':id',$_GET['id']);
+    $stmt->bindParam(':recordDate',$recordDate, PDO::PARAM_STR);
+    $stmt->bindParam(':sleep',$sleep, PDO::PARAM_STR);
+    $stmt->bindParam(':exercise',$exercise, PDO::PARAM_STR);
+    $stmt->bindParam(':food',$food, PDO::PARAM_STR);    
+    $stmt->bindParam(':goal',$goal, PDO::PARAM_STR);
+    $stmt->bindParam(':fun',$fun, PDO::PARAM_STR);
+    $stmt->bindParam(':satisfaction',$satisfaction, PDO::PARAM_STR);
+    $stmt->bindParam(':notes',$notes, PDO::PARAM_STR);
+    $stmt->bindParam(':id',$_GET['id'], PDO::PARAM_INT);
 
 
 
