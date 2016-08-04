@@ -1,5 +1,0 @@
-[05-Jul-2016 18:22:01 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/casebreak/public_html/lifetracker/includes/inc_edit.php on line 8
-[05-Jul-2016 20:14:00 UTC] PHP Fatal error:  Call to a member function bindParam() on a non-object in /home/casebreak/public_html/lifetracker/includes/inc_notes.php on line 10
-[05-Jul-2016 20:14:22 UTC] PHP Fatal error:  Call to a member function bindParam() on a non-object in /home/casebreak/public_html/lifetracker/includes/inc_notes.php on line 10
-[05-Jul-2016 20:14:25 UTC] PHP Fatal error:  Call to a member function bindParam() on a non-object in /home/casebreak/public_html/lifetracker/includes/inc_notes.php on line 10
-[05-Jul-2016 20:15:39 UTC] PHP Fatal error:  Call to a member function prepare() on a non-object in /home/casebreak/public_html/lifetracker/includes/inc_notes.php on line 10
