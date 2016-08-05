@@ -121,7 +121,7 @@ if(isset($_POST['submit'])) {
 
       <div class="input-group">
         <span class="input-group-addon" id="basic-addon1">Hours of Sleep (last night)</span>
-        <input type="number" class="form-control" name="sleep" step="any" required>
+        <input type="number" class="form-control" name="sleep" step="any" placeholder="Whole numbers or decimals allowed. '6.25' for example." required>
       </div>
 
       <select class="form-control" name="exercise" required>
