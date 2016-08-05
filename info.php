@@ -30,7 +30,7 @@
         <li>At the end of each day, sign in to your Life Tracker profile and use the "Tracker" feature to answer some yes/no questions about your day. Hit submit when you are done and the record will be stored in your database.</li>
         <li>The Notes section of the Tracker is meant to be a mini diary of sorts. Enter anything you'd like in here. You can even use keywords that you'll be able to search for later on.</li>
         <li>Select the "Records" link to be taken to an interactive list of all your records.</li>
-        <li>The "Anylyze" link will allow you to search and sort your data and display the results using graphs and percentages to see what you are doing well and what you need to improve on.</li>
+        <li>The "Analyze" link will allow you to search and sort your data and display the results using graphs and percentages to see what you are doing well and what you need to improve on.</li>
         <li><strong>The Tracker only works when you remember to complete your entries at the end of each day. For accurate results, please try to use the app every day.</strong></li>
       </ul>
     </div>
