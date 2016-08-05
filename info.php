@@ -36,7 +36,7 @@
     </div>
 
     <div class="jumbotron">
-      <p>If you have any question or comments, or to report bugs, please email:</p>
+      <p>If you have any questions or comments, or to report bugs, please email:</p>
       <p>Scott Duncan<br>codebyscott@gmail.com</p>
       <p>Thank you!</p>
     </div>
