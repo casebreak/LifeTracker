@@ -2,6 +2,8 @@
 
 session_start();
 
+$page = "records";
+
 //Redirect to login screen if no user is logged in
 if (!isset($_SESSION['username'])) {
   header('Location: http://lifetracker.case-break.com');
