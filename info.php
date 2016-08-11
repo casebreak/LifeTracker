@@ -22,7 +22,10 @@
 
   <div class="container"><!-- Main container -->
 
-    <h1>Thank you for using Life Tracker!</h1>
+    <center><h1 style="color: red;">ATTENTION!<h1>
+    <h3 style="color: red;">The encryption error has been fixed. I will be working on two minor bug fixes this week. At this time, 'Search' functionality on the 'Analyze' page is not working properly. Please <a href="https://www.facebook.com/groups/1193589310693528/">visit the FB group page</a> to keep up to date on changes.</h3></center>
+    <br>
+    <h2>Thank you for using Life Tracker!</h2>
     <h3>Life Tracker is designed to help you track some basic metrics about your day in order to help you live a happier and more productive life.</h3>
 
     <div class="jumbotron">
