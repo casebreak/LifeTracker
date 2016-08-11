@@ -110,7 +110,7 @@ $numRecords += 1;
         <td>
           <!-- Only display "view notes" button if there are notes present -->
           <?php if ($dispData['notes'] != "") { ?>
-          <a href="#" data-toggle="tooltip" data-placement="left" title="<?php echo $dispData['notes']; ?>"><img src="images/glyphicons-30-notes-2-blue.svg"></a>
+          <a href="#" data-toggle="tooltip" data-placement="left" title="<?php echo base64_decode($dispData['notes']); ?>"><img src="images/glyphicons-30-notes-2-blue.svg"></a>
           &nbsp;
           <?php } ?>
         </td>

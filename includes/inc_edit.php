@@ -28,7 +28,7 @@ if(isset($_POST['update'])) {
     $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
-    $notes = clean($_POST['notes']);
+    $notes = base64_encode(clean($_POST['notes']));
 
 
     $sql = "UPDATE records SET recordDate = :recordDate,
@@ -160,7 +160,7 @@ if(isset($_POST['update'])) {
         <option <?php echo (($_POST['satisfaction'] == "Poor") || $row['satisfaction'] == "Poor") ? "selected='selected'" : ""; ?> value="Poor">Poor</option>
       </select>
 
-      <textarea name="notes" class="form-control" rows="5" col="100" maxlength="350" placeholder="Enter any additional notes here (Optional, 350 max characters)"><?php echo (isset($_POST['update']) ? $_POST['notes'] : $row['notes']) ?></textarea>
+      <textarea name="notes" class="form-control" rows="5" col="100" maxlength="350" placeholder="Enter any additional notes here (Optional, 350 max characters)"><?php echo (isset($_POST['update']) ? $_POST['notes'] : base64_decode($row['notes'])) ?></textarea>
 
       <button type="submit" name="update" value="Update" class="btn btn-success">Update Record</button>
       &nbsp;

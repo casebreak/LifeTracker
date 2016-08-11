@@ -27,7 +27,7 @@ if(isset($_POST['submit'])) {
     $goal = $_POST['goal'];
     $fun = $_POST['fun'];
     $satisfaction = $_POST['satisfaction'];
-    $notes = clean($_POST['notes']);
+    $notes = base64_encode(clean($_POST['notes']));
 
     include('includes/inc_connect.php');
 
@@ -115,7 +115,7 @@ if(isset($_POST['submit'])) {
       <!-- Date picker -->
       <div class="input-group">
         <span class="input-group-addon" id="basic-addon1">Date</span>
-        <input type="text" id="date" class="form-control" name="date" />
+        <input type="text" id="date" class="form-control" name="date" required>
         <script>$( "#date" ).dateDropper();</script>
       </div>
 

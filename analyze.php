@@ -1,4 +1,9 @@
 <?php
+/*
+Change SQl query to gather Notes
+Build array of decoded notes and store in session
+Loop thru new array of decoded notes to output matched entries.
+*/
 
 session_start();
 
@@ -559,7 +564,8 @@ foreach ($notes as $day => $note) {
     <div class="well" style="padding: 5px 10px;">
       <p style="margin-bottom: 5px;">Date: <strong><?php echo $day; ?></strong></p> 
       <p style="margin-bottom: 5px;"><?php echo $note; ?></p>
-    </div>       
+    </div> 
+
 
 <?php
 }//End foreach ($notes as $day => $note)
