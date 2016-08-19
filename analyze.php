@@ -17,7 +17,7 @@ Build array of decoded notes and store in session
 Loop thru new array of decoded notes to output matched entries.
 */
 
-$qu = "SELECT * FROM records WHERE user = :user";
+$qu = "SELECT * FROM records WHERE user = :user ORDER BY recordDate DESC";
 $gather = $db->prepare($qu);
 $gather->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
 $gather->execute();
