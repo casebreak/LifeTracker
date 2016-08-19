@@ -22,8 +22,8 @@
 
   <div class="container"><!-- Main container -->
 
-    <center><h1 style="color: red;">ATTENTION!<h1>
-    <h3 style="color: red;">The encryption error has been fixed. I will be working on two minor bug fixes this week. At this time, 'Search' functionality on the 'Analyze' page is not working properly. Please <a href="https://www.facebook.com/groups/1193589310693528/">visit the FB group page</a> to keep up to date on changes.</h3></center>
+    <center><h2 style="color: red;">ATTENTION!<h2></center>
+    <h4 style="color: red;">'Search' functionality is now implemented and working properly! Search for a term within your notes on the 'Analyze' page and your search term will be bold, uppercase and highlighted in yellow, along with displaying the entire note with the corresponding date of the entry.</h4>
     <br>
     <h2>Thank you for using Life Tracker!</h2>
     <h3>Life Tracker is designed to help you track some basic metrics about your day in order to help you live a happier and more productive life.</h3>
