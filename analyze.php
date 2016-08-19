@@ -11,12 +11,7 @@ $page = "analyze";
 
 include('includes/inc_connect.php');
 
-/*
-Change SQl query to gather Notes
-Build array of decoded notes and store in session
-Loop thru new array of decoded notes to output matched entries.
-*/
-
+//Start building notes array by gathering all the notes from the user's DB
 $qu = "SELECT * FROM records WHERE user = :user ORDER BY recordDate DESC";
 $gather = $db->prepare($qu);
 $gather->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
@@ -562,10 +557,15 @@ if (isset($_POST['searchbtn'])) {
 
   $search = $_POST['search'];
 
+  //Counting variable
+  $found = 0;
+
   foreach ($notes1 as $date => $note) {
 
     //Search each note for the search term
     if (stripos($note,$search) !== false) {
+
+      $found++;
 
       //If search term is found, replace it with a bold, highlighted and uppercase version of the search term
       $highlight = str_ireplace($search, '<strong style="background-color: yellow;">'.strtoupper($search).'</strong>', $note);
@@ -580,6 +580,14 @@ if (isset($_POST['searchbtn'])) {
 <?php
 }//End if (stripos($note,$search) !== false)
 }//End foreach ($notes1 as $date => $note)
+//If no records are found...
+if ($found == 0) {
+?>
+
+    <p>No records found matching '<strong><?php echo $search; ?></strong>'</p>
+
+<?php
+}//End if ($found == 0)
 }//End if (isset($_POST['searchbtn']))
 ?>
 
