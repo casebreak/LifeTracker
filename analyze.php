@@ -1,9 +1,4 @@
 <?php
-/*
-Change SQl query to gather Notes
-Build array of decoded notes and store in session
-Loop thru new array of decoded notes to output matched entries.
-*/
 
 session_start();
 
@@ -15,6 +10,28 @@ if (!isset($_SESSION['username'])) {
 $page = "analyze";
 
 include('includes/inc_connect.php');
+
+/*
+Change SQl query to gather Notes
+Build array of decoded notes and store in session
+Loop thru new array of decoded notes to output matched entries.
+*/
+
+$qu = "SELECT * FROM records WHERE user = :user";
+$gather = $db->prepare($qu);
+$gather->bindParam(':user',$_SESSION['username'], PDO::PARAM_STR);
+$gather->execute();
+
+//Initialize empty array to populate with user notes
+$notes1 = array();
+
+//Loop through the DB
+for ($i=0; $grab = $gather->fetch(PDO::FETCH_ASSOC); $i++) {
+
+  //Build array with 'recordDate' being the key and the decoded 'notes' section as the value.
+  //This will ensure I have an array or decoded notes to search through when a user enters a search term.
+  $notes1[$grab['recordDate']] = base64_decode($grab['notes']);
+}
 
 $stmt = "";
 
@@ -44,10 +61,6 @@ if (isset($_GET['day'])) {
 } elseif (isset($_GET['timeframe'])) {
   
   $stmt .= "SELECT * FROM records WHERE user = :user ORDER BY recordDate DESC LIMIT " . $_GET['timeframe'] . "";
-
-} elseif (isset($_POST['searchbtn'])) {
-  
-  $stmt .= "SELECT * FROM records WHERE user = :user AND notes LIKE '%" . $_POST['search'] . "%' ORDER BY recordDate DESC";
 
 }
 
@@ -284,14 +297,7 @@ $fun_no = 0;
 
 $sleepAvg = 0;
 
-
-//Initialize empty $notes array
-$notes = array();
-
 for ($i=0; $row = $result->fetch(PDO::FETCH_ASSOC); $i++) { 
-
-  //Append the $notes array to include the recordDate as the key and the note as the value
-  $notes[$row['recordDate']] = $row['notes'];
  
   $numRecords = $i + 1; //Count the number of records
 
@@ -553,22 +559,27 @@ if ($numRecords == 0) { //If no records exist...
 }//End if ($stmt != "")
 
 if (isset($_POST['searchbtn'])) {
-?>
-    <p>Number of records matching your search: <?php echo $numRecords; ?></p>
 
-<?php
-//Iterate through $notes array to print key->value pairs of entries
-foreach ($notes as $day => $note) {
+  $search = $_POST['search'];
+
+  foreach ($notes1 as $date => $note) {
+
+    //Search each note for the search term
+    if (stripos($note,$search) !== false) {
+
+      //If search term is found, replace it with a bold, highlighted and uppercase version of the search term
+      $highlight = str_ireplace($search, '<strong style="background-color: yellow;">'.strtoupper($search).'</strong>', $note);
 ?>
 
     <div class="well" style="padding: 5px 10px;">
-      <p style="margin-bottom: 5px;">Date: <strong><?php echo $day; ?></strong></p> 
-      <p style="margin-bottom: 5px;"><?php echo $note; ?></p>
+      <p style="margin-bottom: 5px;">Date: <strong><?php echo $date; ?></strong></p> 
+      <p style="margin-bottom: 5px;"><?php echo $highlight; ?></p>
     </div> 
 
 
 <?php
-}//End foreach ($notes as $day => $note)
+}//End if (stripos($note,$search) !== false)
+}//End foreach ($notes1 as $date => $note)
 }//End if (isset($_POST['searchbtn']))
 ?>
 
